@@ -1,0 +1,12 @@
+# Java Library Management System
+
+This is a simple Java-based Library Management System implemented using Object-Oriented Programming concepts. All classes are written in a single file for easy execution and understanding.
+
+## Features
+
+- Add and display books
+- Issue books (if not already issued)
+- Return books (if previously issued)
+- Menu-based console interface
+
+                
