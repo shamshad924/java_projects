@@ -1,0 +1,10 @@
+A simple Java program that implements an Account class with deposit and withdraw methods, maintaining account balance and transaction history.
+
+Features
+Create an account with an initial balance
+
+Deposit funds (with validation)
+
+Withdraw funds (with validation for insufficient balance)
+
+View transaction history
