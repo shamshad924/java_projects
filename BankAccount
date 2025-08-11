@@ -1,0 +1,70 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Account {
+    private String accountHolder;
+    private double balance;
+    private List<String> transactionHistory;
+
+    // Constructor
+    public Account(String accountHolder, double initialBalance) {
+        this.accountHolder = accountHolder;
+        this.balance = initialBalance;
+        this.transactionHistory = new ArrayList<>();
+        transactionHistory.add("Account created with balance: " + initialBalance);
+    }
+
+    // Deposit method
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            System.out.println("Deposit amount must be positive.");
+            return;
+        }
+        balance += amount;
+        transactionHistory.add("Deposited: " + amount + " | New Balance: " + balance);
+        System.out.println("Deposit successful. New Balance: " + balance);
+    }
+
+    // Withdraw method
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("Withdrawal amount must be positive.");
+            return;
+        }
+        if (amount > balance) {
+            System.out.println("Insufficient funds.");
+            return;
+        }
+        balance -= amount;
+        transactionHistory.add("Withdrew: " + amount + " | New Balance: " + balance);
+        System.out.println("Withdrawal successful. New Balance: " + balance);
+    }
+
+    // Get current balance
+    public double getBalance() {
+        return balance;
+    }
+
+    // Print transaction history
+    public void printTransactionHistory() {
+        System.out.println("\nTransaction History for " + accountHolder + ":");
+        for (String record : transactionHistory) {
+            System.out.println(record);
+        }
+    }
+}
+
+// Main class to test
+public class BankApp {
+    public static void main(String[] args) {
+        Account acc = new Account("John Doe", 1000);
+
+        acc.deposit(500);
+        acc.withdraw(200);
+        acc.withdraw(1500); // Should show insufficient funds
+        acc.deposit(-50);   // Invalid deposit
+        acc.withdraw(100);
+
+        acc.printTransactionHistory();
+    }
+}
