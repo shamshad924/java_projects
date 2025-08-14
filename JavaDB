@@ -1,0 +1,120 @@
+import java.sql.*;
+import java.util.Scanner;
+
+public class DBApp {
+
+    // Update these details
+    static final String DB_URL = "jdbc:mysql://localhost:3306/testdb"; // For MySQL
+    // static final String DB_URL = "jdbc:postgresql://localhost:5432/testdb"; // For PostgreSQL
+    static final String USER = "root";  // DB username
+    static final String PASS = "password"; // DB password
+
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             Scanner sc = new Scanner(System.in)) {
+
+            System.out.println("Connected to DB successfully!");
+
+            while (true) {
+                System.out.println("\n--- MENU ---");
+                System.out.println("1. Add User");
+                System.out.println("2. View Users");
+                System.out.println("3. Update User");
+                System.out.println("4. Delete User");
+                System.out.println("5. Exit");
+                System.out.print("Enter choice: ");
+                int choice = sc.nextInt();
+                sc.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        addUser(conn, sc);
+                        break;
+                    case 2:
+                        viewUsers(conn);
+                        break;
+                    case 3:
+                        updateUser(conn, sc);
+                        break;
+                    case 4:
+                        deleteUser(conn, sc);
+                        break;
+                    case 5:
+                        System.out.println("Exiting...");
+                        return;
+                    default:
+                        System.out.println("Invalid choice.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Create
+    static void addUser(Connection conn, Scanner sc) throws SQLException {
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter email: ");
+        String email = sc.nextLine();
+
+        String sql = "INSERT INTO users(name, email) VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, email);
+            int rows = ps.executeUpdate();
+            System.out.println(rows + " user(s) added.");
+        }
+    }
+
+    // Read
+    static void viewUsers(Connection conn) throws SQLException {
+        String sql = "SELECT * FROM users";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("\nID | Name | Email");
+            System.out.println("-------------------------");
+            while (rs.next()) {
+                System.out.printf("%d | %s | %s%n",
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"));
+            }
+        }
+    }
+
+    // Update
+    static void updateUser(Connection conn, Scanner sc) throws SQLException {
+        System.out.print("Enter user ID to update: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter new name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter new email: ");
+        String email = sc.nextLine();
+
+        String sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setInt(3, id);
+            int rows = ps.executeUpdate();
+            System.out.println(rows + " user(s) updated.");
+        }
+    }
+
+    // Delete
+    static void deleteUser(Connection conn, Scanner sc) throws SQLException {
+        System.out.print("Enter user ID to delete: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+            System.out.println(rows + " user(s) deleted.");
+        }
+    }
+}
