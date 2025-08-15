@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Class to store quiz question
+class Question {
+    String questionText;
+    String[] options;
+    int correctOption; // index of correct option (0-based)
+
+    public Question(String questionText, String[] options, int correctOption) {
+        this.questionText = questionText;
+        this.options = options;
+        this.correctOption = correctOption;
+    }
+}
+
+public class QuizApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Step 1: Create list of questions
+        List<Question> questions = new ArrayList<>();
+        questions.add(new Question("What is the capital of France?",
+                new String[]{"Berlin", "Paris", "Rome", "Madrid"}, 1));
+        questions.add(new Question("Which planet is known as the Red Planet?",
+                new String[]{"Earth", "Mars", "Jupiter", "Saturn"}, 1));
+        questions.add(new Question("Which language is used for Android development?",
+                new String[]{"Kotlin", "Swift", "C#", "Ruby"}, 0));
+
+        int score = 0;
+
+        // Step 2: Loop through each question
+        for (int i = 0; i < questions.size(); i++) {
+            Question q = questions.get(i);
+
+            System.out.println("\nQuestion " + (i + 1) + ": " + q.questionText);
+
+            for (int j = 0; j < q.options.length; j++) {
+                System.out.println((j + 1) + ". " + q.options[j]);
+            }
+
+            System.out.print("Your answer (1-" + q.options.length + "): ");
+            int answer = sc.nextInt() - 1;
+
+            if (answer == q.correctOption) {
+                System.out.println("✅ Correct!");
+                score++;
+            } else {
+                System.out.println("❌ Wrong! Correct answer: " + q.options[q.correctOption]);
+            }
+        }
+
+        // Step 3: Show final score
+        System.out.println("\n===== Quiz Over =====");
+        System.out.println("Your Score: " + score + "/" + questions.size());
+
+        sc.close();
+    }
+}
